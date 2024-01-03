@@ -70,11 +70,6 @@ async function run() {
       next();
     }
 
-    /**
-     * 0. do not show secure links to those who should not see the links
-     * 1. use jwt token: verifyJWT
-     * 2. use verifyAdmin middleware
-    */
 
     // users related apis
     app.get('/users', verifyJWT, verifyAdmin, async (req, res) => {
@@ -82,6 +77,7 @@ async function run() {
       res.send(result);
     });
 
+    //for post
     app.post('/users', async (req, res) => {
       const user = req.body;
       const query = { email: user.email }
@@ -111,6 +107,7 @@ async function run() {
       res.send(result);
     })
 
+    //for patch
     app.patch('/users/admin/:id', async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -133,12 +130,14 @@ async function run() {
       res.send(result);
     })
 
+    //for menu post
     app.post('/menu', verifyJWT, verifyAdmin, async (req, res) => {
       const newItem = req.body;
       const result = await menuCollection.insertOne(newItem)
       res.send(result);
     })
 
+    //for manu delete
     app.delete('/menu/:id', verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
@@ -146,7 +145,7 @@ async function run() {
       res.send(result);
     })
 
-    // review related apis
+    // review 
     app.get('/reviews', async (req, res) => {
       const result = await reviewCollection.find().toArray();
       res.send(result);
@@ -240,19 +239,7 @@ async function run() {
     })
 
 
-    /**
-     * ---------------
-     * BANGLA SYSTEM(second best solution)
-     * ---------------
-     * 1. load all payments
-     * 2. for each payment, get the menuItems array
-     * 3. for each item in the menuItems array get the menuItem from the menu collection
-     * 4. put them in an array: allOrderedItems
-     * 5. separate allOrderedItems by category using filter
-     * 6. now get the quantity by using length: pizzas.length
-     * 7. for each category use reduce to get the total amount spent on this category
-     * 
-    */
+
     app.get('/order-stats', verifyJWT, verifyAdmin, async(req, res) =>{
       const pipeline = [
         {
@@ -301,23 +288,10 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('boss is sitting')
+  res.send('Server is running')
 })
 
 app.listen(port, () => {
-  console.log(`Bistro boss is sitting on port ${port}`);
+  console.log(`Connection is sitting on port ${port}`);
 })
 
-
-/**
- * --------------------------------
- *      NAMING CONVENTION
- * --------------------------------
- * users : userCollection
- * app.get('/users')
- * app.get('/users/:id')
- * app.post('/users')
- * app.patch('/users/:id')
- * app.put('/users/:id')
- * app.delete('/users/:id')
-*/
