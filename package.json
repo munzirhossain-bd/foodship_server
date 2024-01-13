@@ -1,5 +1,5 @@
 {
-  "name": "medipoint-server",
+  "name": "foodship-server",
   "version": "1.0.0",
   "description": "a web server for medicine application",
   "main": "index.js",
